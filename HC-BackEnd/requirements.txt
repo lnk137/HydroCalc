@@ -1,0 +1,11 @@
+Flask
+Pillow
+numpy
+opencv-python
+Torch
+pywebview 
+flask_cors
+scikit-learn
+pandas
+openpyxl
+pyinstaller
