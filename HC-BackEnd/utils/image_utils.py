@@ -205,7 +205,8 @@ def calculate_parameters(img_pil):
     config.maximum_staining_depth = calculate_maximum_staining_depth(img_pil)
     config.length_index = calculate_length_index(img_pil)
 
-def process_image(img_pil, lower_range, upper_range, resolution):
+def process_im
+    age(img_pil, lower_range, upper_range, resolution):
     img_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
     img_cv = cv2.GaussianBlur(img_cv, (3, 3), 0)
     img_pil = Image.fromarray(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB))
