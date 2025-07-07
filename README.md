@@ -1,4 +1,4 @@
-# HydroCalc - 优先流指标评估系统 | Priority Flow Index Evaluation System
+# HydroCalc - 优先流指标评估系统 | Preferential Flow Index Evaluation System
 
 [English](#english) | [中文](#chinese)
 
@@ -89,10 +89,10 @@
 本项目采用 MIT 许可证，详细内容请见 [LICENSE](LICENSE) 文件。
 
 <a id="english"></a>
-# Priority Flow Index Evaluation System Based on Intelligent Algorithms
+# Preferential Flow Index Evaluation System Based on Intelligent Algorithms
 
 ## Table of Contents
-- [HydroCalc - 优先流指标评估系统 | Priority Flow Index Evaluation System](#hydrocalc---优先流指标评估系统--priority-flow-index-evaluation-system)
+- [HydroCalc - 优先流指标评估系统 | Preferential Flow Index Evaluation System](#hydrocalc---优先流指标评估系统--preferential-flow-index-evaluation-system)
 - [基于智能算法的优先流指标评估系统](#基于智能算法的优先流指标评估系统)
   - [目录](#目录)
   - [项目描述](#项目描述)
@@ -104,7 +104,7 @@
     - [4. 示例图像](#4-示例图像)
   - [贡献](#贡献)
   - [开源许可证](#开源许可证)
-- [Priority Flow Index Evaluation System Based on Intelligent Algorithms](#priority-flow-index-evaluation-system-based-on-intelligent-algorithms)
+- [Preferential Flow Index Evaluation System Based on Intelligent Algorithms](#preferential-flow-index-evaluation-system-based-on-intelligent-algorithms)
   - [Table of Contents](#table-of-contents)
   - [Project Description](#project-description)
   - [Features](#features)
@@ -118,17 +118,17 @@
 
 ## Project Description
 
-"[HydroCalc](https://github.com/lnk137/HydroCalc)" is a comprehensive software system designed for calculating and analyzing priority flow indices in ecological restoration, soil and water conservation, hydrogeology, soil science, and environmental science. This project integrates advanced data processing algorithms, intelligent analysis, AI training models, and 3D visualization technology to provide efficient and accurate priority flow index calculations.
+"[HydroCalc](https://github.com/lnk137/HydroCalc)" is a comprehensive software system designed for calculating and analyzing preferential flow indices in ecological restoration, soil and water conservation, hydrogeology, soil science, and environmental science. This project integrates advanced data processing algorithms, intelligent analysis, AI training models, and 3D visualization technology to provide efficient and accurate preferential flow index calculations.
 
-The system processes images using Python programming language and displays priority flow indicators through a Vue-based frontend interface.
+The system processes images using Python programming language and displays preferential flow indicators through a Vue-based frontend interface.
 
 ## Features
 
-- **Intelligent Priority Flow Index Calculation**: Calculates seven indicators including stained area ratio, priority flow percentage, priority stained area ratio, stained area, matrix flow depth, maximum staining depth, and length index.
+- **Intelligent Preferential Flow Index Calculation**: Calculates seven indicators including stained area ratio, preferential flow percentage, preferential stained area ratio, stained area, matrix flow depth, maximum staining depth, and length index.
 - **Image Processing and Analysis**: Uses HSV thresholding for image masking, K-means clustering for color classification, and supports Gaussian blur processing.
 - **3D Modeling**: Performs 3D clustering modeling through vertical slice images, innovatively breaking free from traditional radar detection limitations.
 - **AI Integration**: Imports U-net for automatic prediction and classification result generation.
-- **Image Export and Data Analysis**: Supports exporting processed images and pixel matrix tables, generates soil profile stained area ratio charts varying with depth, and analyzes priority flow indicators through linear regression.
+- **Image Export and Data Analysis**: Supports exporting processed images and pixel matrix tables, generates soil profile stained area ratio charts varying with depth, and analyzes preferential flow indicators through linear regression.
 
 ## Installation and Usage
 
@@ -167,23 +167,23 @@ The system processes images using Python programming language and displays prior
 1. **Launch the System**: Start the backend program and wait for the frontend interface to load.
 2. **Import Image Folder Path**: Import the folder path containing images from the script for 3D modeling.
 3. **Adjust HSV Threshold**: Optimize image processing effects by adjusting HSV thresholds as needed.
-4. **Upload Images**: Upload soil profile images through drag-and-drop or path selection.
-5. **View and Export Results**: View priority flow index calculation results and export related data tables.
+4. **Upload Image**: Upload soil profile images by dragging and dropping or selecting the path.
+5. **View and Export Results**: View preferential flow index calculation results and export relevant data tables.
 
 ### 4. Example Images
 
-- **Original and Processed Images**: Provides resolution-adjusted original images, binary images, and Gaussian-blurred clustering images.
+- **Original and Processed Images**: Provides resolution-adjusted original images, black and white binary images, Gaussian blurred clustered images, etc.
 
   ![256](README.assets/256.png)
 
-- **K-means Clustering Image**: Shows the distribution of priority flow and matrix flow through K-means clustering algorithm.
+- **K-means Clustered Image**: Analyzes color classification using the K-means clustering algorithm, showing the distribution of preferential flow and matrix flow.
 
   ![5648466](README.assets/5648466.png)
 
 ## Contributing
 
-Developers and researchers are welcome to contribute code and suggestions to help improve this system. If you're interested, you can participate by submitting Pull Requests or raising Issues.
+Developers and researchers are welcome to contribute code and suggestions to help improve this system. If you are interested, you can participate by submitting Pull Requests or raising Issues.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
