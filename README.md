@@ -1,84 +1,76 @@
-# HydroCalc - Preferential Flow Index Evaluation System
+# HydroCalc 2
 
-## Table of Contents
-- [Project Description](#project-description)
-- [Features](#features)
-- [Installation and Usage](#installation-and-usage)
-  - [Requirements](#1-requirements)
-  - [Deployment Steps](#2-deployment-steps)
-  - [Usage Guide](#3-usage-guide)
-  - [Example Images](#4-example-images)
-- [Contributing](#contributing)
-- [License](#license)
+土壤优先流图像分析桌面应用，支持 macOS 和 Windows。界面使用中性微灰白与莫兰迪薄荷绿，提供参考 One Dark Pro 的深色模式、中文和英语。
 
-## Project Description
+[English](README.en.md) · [架构](docs/ARCHITECTURE.md) · [指标定义](docs/METRICS.md) · [验证记录](docs/VALIDATION.md)
 
-"[HydroCalc](https://github.com/lnk137/HydroCalc)" is a comprehensive software system designed for calculating and analyzing preferential flow indices in ecological restoration, soil and water conservation, hydrogeology, soil science, and environmental science. This project integrates advanced data processing algorithms, intelligent analysis, AI training models, and 3D visualization technology to provide efficient and accurate preferential flow index calculations.
+## 功能
 
-The system processes images using Python programming language and displays preferential flow indicators through a Vue-based frontend interface.
+- 自动识别彩色与近乎纯黑白输入，也可明确选择 HSV 提取或二值图分析。
+- HSV 双端滑块、键盘微调和精确数值输入，参数自动保存。
+- 按剖面实际宽高标定七项优先流指标，生成可悬停检查的深度曲线。
+- 有／无高斯模糊的 K-means 聚类及各自独立的颜色面积统计。
+- 多选图片、文件夹及文件夹拖入；批量排队、失败隔离、取消等待项和重试失败项。
+- 原图、二值图、参考线图、聚类图预览与放大。
+- 导出 PNG、Excel 像素矩阵、深度 CSV、指标 CSV、完整 ZIP 分析包；批量 ZIP 附汇总 CSV。
+- SQLite 保存历史和每项任务的参数快照，配置文件保存设置，重启后自动恢复。
 
-## Features
+本阶段不包含 AI、模型推理、Python 或相关运行依赖。旧 README 提及但旧仓库没有代码的三维重建、模型训练、回归分析不作为已存在功能保留。
 
-- **Intelligent Preferential Flow Index Calculation**: Calculates seven indicators including stained area ratio, preferential flow percentage, preferential stained area ratio, stained area, matrix flow depth, maximum staining depth, and length index.
-- **Image Processing and Analysis**: Uses HSV thresholding for image masking, K-means clustering for color classification, and supports Gaussian blur processing.
-- **3D Modeling**: Performs 3D clustering modeling through vertical slice images, innovatively breaking free from traditional radar detection limitations.
-- **AI Integration**: Imports U-net for automatic prediction and classification result generation.
-- **Image Export and Data Analysis**: Supports exporting processed images and pixel matrix tables, generates soil profile stained area ratio charts varying with depth, and analyzes preferential flow indicators through linear regression.
+## 技术与目录
 
-## Installation and Usage
+| 部分 | 实现 |
+| --- | --- |
+| 界面 | Vue 3 + TypeScript + vue-i18n |
+| 桌面、本地业务 | Electron + Node.js，同源回环 HTTP 与最小 IPC |
+| 图像计算 | 独立 OpenCV C++ 可执行文件，JSON Lines 协议 |
+| 历史、设置 | Node 内置 SQLite / 原子 JSON 配置 |
+| 打包 | Electron Forge，Mac 与 Windows 分别构建 |
 
-### 1. Requirements
+```
+HC-FrontEnd/src/   界面、状态与组件
+locales/          共用中文、英语文案
+electron/         窗口、HTTP、任务、SQLite、导出
+native/           OpenCV C++ 计算程序
+scripts/          跨平台构建入口
+tests/            计算、API、导出与真实 Electron 验收
+```
 
-- Python 3.x
-- Vue.js
+## 开发
 
-### 2. Deployment Steps
+需要 Node.js 24、CMake 3.24+ 和 C++17 编译器。macOS 安装 Xcode Command Line Tools 与 Ninja；Windows 安装 Visual Studio 2022 的 Desktop development with C++ 与 CMake。
 
-1. Clone the project:
-   ```bash
-   git clone git@github.com:lnk137/HydroCalc.git
-   ```
+```sh
+npm ci
+npm run build:native
+npm run dev
+```
 
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+首次构建从固定 URL 下载经过 SHA-256 校验的 OpenCV 4.12.0 和 nlohmann/json 3.12.0，仅编译 core、imgproc、imgcodecs。开发模式由 Electron 管理 Vite，无须手工启动计算服务。`npm start` 使用已构建前端。
 
-3. Start the frontend:
-   ```bash
-   cd frontend
-   npm install
-   npm run serve
-   ```
+## 使用
 
-4. Start the backend:
-   ```bash
-   cd backend
-   python app.py
-   ```
+1. 在设置中标定真实剖面宽、高；默认均为 50 cm。界面分辨率默认 500×500。
+2. 选择自动识别、HSV 或二值分析，调整染色阈值；所有有效设置自动保存，无须确认。
+3. 导入图片或文件夹。整批使用导入时的同一份参数快照；修改设置只影响新批次。
+4. 查看七项指标、深度曲线、参考线和两种聚类统计。
+5. 按需要导出单项、完整分析包，或整个批次的结果。
 
-### 3. Usage Guide
+每张图片上限 20 MB、3000 万像素，处理分辨率为 64–2000 px。批量导入逐张读取并保持有限在途任务，不会把整个目录的图片内容同时载入内存。二值图约定黑色为染色，白色为背景。
 
-1. **Launch the System**: Start the backend program and wait for the frontend interface to load.
-2. **Import Image Folder Path**: Import the folder path containing images from the script for 3D modeling.
-3. **Adjust HSV Threshold**: Optimize image processing effects by adjusting HSV thresholds as needed.
-4. **Upload Image**: Upload soil profile images by dragging and dropping or selecting the path.
-5. **View and Export Results**: View preferential flow index calculation results and export relevant data tables.
+CSV、JSON 使用固定英文列名便于科研软件读取；界面、错误与原生操作支持中英切换。Excel 矩阵不含参考线，灰度值为 0 / 255。
 
-### 4. Example Images
+## 构建和验证
 
-- **Original and Processed Images**: Provides resolution-adjusted original images, black and white binary images, Gaussian blurred clustered images, etc.
+```sh
+npm run build:ui
+npm test
+npm run test:desktop
+npm run make
+```
 
-  ![256](README.assets/256.png)
+`npm run make` 自动构建前端与计算程序，再调用 Forge。macOS 输出 `.dmg` / `.zip`，Windows 输出 Squirrel 安装包 / `.zip`。工作流对 Apple Silicon Mac、Intel Mac、Windows x64 分别编译、测试并打包；不能在 Mac 上直接生成 Windows 原生计算程序。
 
-- **K-means Clustered Image**: Analyzes color classification using the K-means clustering algorithm, showing the distribution of preferential flow and matrix flow.
+用户无需安装 Node、CMake 或 OpenCV。默认发行包未配置开发者签名与 Apple 公证，正式公开发行时需配置相应签名身份；当前不创建发布版或自动更新渠道。
 
-  ![5648466](README.assets/5648466.png)
-
-## Contributing
-
-Developers and researchers are welcome to contribute code and suggestions to help improve this system. If you are interested, you can participate by submitting Pull Requests or raising Issues.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+设置和数据库位于 Electron 的用户数据目录，可在设置页直接打开。历史删除会同时移除该项计算的图像与数据，不删除原始导入文件。

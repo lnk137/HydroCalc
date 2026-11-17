@@ -1,0 +1,46 @@
+name: Desktop verification and builds
+
+on:
+  push:
+    branches: [master, 'refactor/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build native worker
+        run: npm run build:native
+      - name: Build and type-check Vue
+        run: npm run build:ui
+      - name: Verify calculations, database, exports, and languages
+        run: npm test
+      - name: Verify real desktop flows
+        run: npm run test:desktop
+      - name: Build platform installers
+        run: npx electron-forge make
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HydroCalc-${{ matrix.os }}
+          path: out/make/**
+          if-no-files-found: error
