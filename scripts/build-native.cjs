@@ -58,5 +58,6 @@ fs.mkdirSync(licenseDirectory, {
 });
 for (const [name, relative] of Object.entries(licenses)) {
   const sourcePath = path.join(build, "_deps", relative);
-  if (fs.existsSync(sourcePath)) fs.copyFileSync(sourcePath, path.join(licenseDirectory, name));
+  if (fs.existsSync(sourcePath))
+    fs.copyFileSync(sourcePath, path.join(licenseDirectory, name));
 }
