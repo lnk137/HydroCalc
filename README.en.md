@@ -36,6 +36,8 @@ npm run make
 
 Build on each target OS and architecture. Forge creates Mac DMG/ZIP and Windows Squirrel/ZIP artifacts. End users do not need Node.js or OpenCV. Signing and Apple notarization are not configured for local development builds.
 
+For Windows x64 cross-builds on macOS, install MinGW-w64, Mono, SevenZip and Ninja, then run `npm run build:ui`, `npm run build:windows-worker`, and `npm run make:windows`. Windows worker resources are isolated from the Mac worker. Forge/Squirrel uses native Mono, 7-Zip and PE resource editing without Wine. A successful cross-build does not replace native Windows runtime testing.
+
 The default calibration is a 50 × 50 cm profile at 500 × 500 pixels. Limits: 20 MB / 30 million source pixels per image and 64–2000 pixels per processing dimension. Binary images use black for stained pixels. All images in a batch use the same settings snapshot; individual failures do not stop the batch.
 
 See [architecture](docs/ARCHITECTURE.md), [metric definitions](docs/METRICS.md), and [validation](docs/VALIDATION.md) for implementation details and verification limits. The old README's unimplemented 3D, training, and regression claims are not represented as existing features.

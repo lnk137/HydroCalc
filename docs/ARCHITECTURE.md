@@ -44,3 +44,5 @@ Excel 使用 Node worker thread 逐行写出，ZIP 批量导出流式写入磁�
 ## 平台构建
 
 CMake 固定并校验第三方源码，静态链接 OpenCV 计算模块。Forge 将计算程序复制到资源目录。分别针对 macOS arm64、macOS x64、Windows x64 运行编译与桌面测试，不使用 Python，也不跨系统复用本地二进制文件。
+
+Mac 交叉构建使用 `native/toolchains/mingw-x64.cmake`，将 Windows x64 工作进程和静态运行库许可放入独立资源目录。`scripts/make-windows.cjs` 为 Squirrel 的 Windows 辅助程序提供有限的本机适配：7-Zip 压缩、PE 资源复制、安装 ZIP 内嵌和版本写入；NuGet、RELEASES 和安装协议仍由原版 Squirrel 负责。资源布局依据 [Squirrel 的 WriteZipToSetup 实现](https://github.com/Squirrel/Squirrel.Windows/blob/develop/src/WriteZipToSetup/WriteZipToSetup.cpp)，测试检查机器代码、入口点和 ZIP 内容均保留。适配器不执行任意 Windows 程序，也不用于代替运行测试。

@@ -69,7 +69,17 @@ npm run test:desktop
 npm run make
 ```
 
-`npm run make` 自动构建前端与计算程序，再调用 Forge。macOS 输出 `.dmg` / `.zip`，Windows 输出 Squirrel 安装包 / `.zip`。工作流对 Apple Silicon Mac、Intel Mac、Windows x64 分别编译、测试并打包；不能在 Mac 上直接生成 Windows 原生计算程序。
+`npm run make` 自动构建前端与计算程序，再调用 Forge。macOS 输出 `.dmg` / `.zip`，Windows 输出 Squirrel 安装包 / `.zip`。工作流对 Apple Silicon Mac、Intel Mac、Windows x64 分别编译、测试并打包。
+
+Mac 也可以生成 Windows x64 包：安装 `mingw-w64`、`mono`、`sevenzip` 和 Ninja，然后执行：
+
+```sh
+npm run build:ui
+npm run build:windows-worker
+npm run make:windows
+```
+
+交叉编译的 Windows 工作进程独立保存在 `dist/win32-x64/worker`，不会覆盖 Mac 版本。安装器继续使用 Forge/Squirrel，由本机 Mono、7-Zip 和 PE 资源工具生成，无须安装 Wine。该过程生成真实 Windows x64 二进制，但不等于已完成 Windows 实机运行验收。
 
 用户无需安装 Node、CMake 或 OpenCV。默认发行包未配置开发者签名与 Apple 公证，正式公开发行时需配置相应签名身份；当前不创建发布版或自动更新渠道。
 
