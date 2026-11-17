@@ -1,121 +1,109 @@
-<template>
-  <div class="body">
-    <div class="sidebar">
-      <!-- 导入 -->
-      <router-link to="/set" class="nav-link">
-        <img src="@/assets/参数设置.svg" alt="参数" class="icon" />
-        参数调整
-      </router-link>
-      <!-- 导入 -->
-      <router-link to="/upload" class="nav-link">
-        <img src="@/assets/上传.svg" alt="导入" class="icon" />
-        导入图片
-      </router-link>
-      <!-- 导入 -->
-      <router-link to="/result" class="nav-link">
-        <img src="@/assets/结果查看.svg" alt="导入" class="icon" style="scale: 0.8;"/>
-        结果查看
-      </router-link>
+<script setup lang="ts">
+import { t } from "./i18n";
+import { onMounted, watch } from "vue";
+import Icon from "./components/Icon.vue";
+import AnalysisView from "./views/AnalysisView.vue";
+import HistoryView from "./views/HistoryView.vue";
+import SettingsView from "./views/SettingsView.vue";
+import { applyTheme, dirty, initialize, scheduleSave, state } from "./state";
 
-      <!-- <router-link to="/test" class="nav-link">
-        <img src="@/assets/训练.svg" alt="导入" class="icon"  />
-        模型训练
-      </router-link>  -->
-
-    </div>
-
-    <div class="content">
-      <router-view />
-    </div>
-  </div>
-</template>
-
-<script setup>
-
+// 设置页面的外观立即预览，随后由防抖保存写入配置文件。
+watch(
+  () => [state.draft?.theme, state.draft?.reduce_motion, state.draft?.language],
+  () => {
+    if (state.draft) applyTheme(state.draft);
+  },
+);
+function quickTheme() {
+  if (!state.draft) return;
+  state.draft.theme =
+    document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+}
+watch(() => state.draft, scheduleSave, {
+  deep: true,
+});
+onMounted(() => {
+  initialize();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (state.draft) applyTheme(state.draft);
+  });
+});
 </script>
 
-
-<style scoped lang="less">
-@max: 100%;
-@sidebar_width: 220px;
-
-.body {
-  background-color: #c4d6d0;
-  display: flex;
-  height: @max;
-  width: @max;
-
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: @sidebar_width;
-    height: 100vh;
-    background: linear-gradient(#26A484, #26a4a4);
-    border-radius: 7px;
-    flex: 0 0 auto;
-    /* 防止侧边栏被压缩 */
-    position: fixed;
-    /* 固定在页面左侧 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* 添加阴影 */
-  }
-
-  .nav-link {
-  display: flex;
-  height: 15%;
-  color: #323440;
-  font-size: 30px;
-  font-weight: bold;
-  text-decoration: none; //去掉下划线
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s, opacity 0.3s, color 0.3s;
-}
-
-.nav-link:hover {
-  height: 15%;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 0.251);
-  border-radius: 20px;
-
-  /* 添加hover效果 */
-}
-
-.nav-link:focus {
-  background-color: rgba(198, 198, 198, 0.201);
-  /* 添加按下时的背景色 */
-  color: rgb(194, 212, 222);
-  /* 改变文字颜色以提高可读性 */
-}
-.icon {
-  margin-top: 5px; /* 控制图标的上边距 */
-  width: 35px; /* 控制图标的宽度 */
-  height: 35px; /* 控制图标的高度 */
-}
-  .content {
-    flex-grow: 1;
-
-    padding: 20px;
-    overflow-y: auto;
-    /* 当内容超出时可以滚动 */
-    margin-left: @sidebar_width;
-    /* 留出侧边栏的空间 */
-    // scrollbar-width: thin; /* 针对 Firefox 的滚动条样式 */
-  }
-}
-.icon {
-  margin-top: 5px; /* 控制图标的上边距 */
-  width: 30px; /* 控制图标的宽度 */
-  height: 30px; /* 控制图标的高度 */
-}
-
-::-webkit-scrollbar {
-    width: 0px; /*对垂直流动条有效*/
-    height: 6px; /*对水平流动条有效*/
-}
-
-</style>
+<template>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" @click.prevent="state.page = 'analysis'"
+        ><span class="brand-symbol"><Icon name="drop" :size="23" /></span
+        ><span>HydroCalc</span></a
+      >
+      <div class="sidebar-caption">{{ t("app.subtitle") }}</div>
+      <nav :aria-label="t('nav.main')">
+        <button
+          :class="{ active: state.page === 'analysis' }"
+          @click="state.page = 'analysis'"
+        >
+          <Icon name="image" />{{ t("nav.analysis") }}
+        </button>
+        <button
+          :class="{ active: state.page === 'history' }"
+          @click="state.page = 'history'"
+        >
+          <Icon name="history" />{{ t("nav.history")
+          }}<span class="nav-count" v-if="state.history.length">{{
+            state.history.length
+          }}</span>
+        </button>
+        <button
+          :class="{ active: state.page === 'settings' }"
+          @click="state.page = 'settings'"
+        >
+          <Icon name="settings" />{{ t("nav.settings")
+          }}<span
+            v-if="dirty"
+            class="unsaved-dot"
+            :aria-label="t('common.unsaved')"
+          ></span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="theme-toggle" @click="quickTheme">
+          <Icon name="moon" :size="18" /><span>{{ t("app.toggleTheme") }}</span
+          ><span class="theme-key">◐</span>
+        </button>
+        <div class="version">
+          <span class="status-dot"></span>{{ t("app.local")
+          }}<span>v{{ state.info?.version || "2.0.0" }}</span>
+        </div>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div v-if="state.error" class="error-banner" role="alert">
+        <Icon name="info" :size="18" /><span>{{ t(state.error) }}</span
+        ><button
+          class="icon-button"
+          :aria-label="t('app.closeError')"
+          @click="state.error = ''"
+        >
+          <Icon name="close" :size="16" />
+        </button>
+      </div>
+      <template v-if="state.info">
+        <AnalysisView v-if="state.page === 'analysis'" />
+        <HistoryView v-else-if="state.page === 'history'" />
+        <SettingsView v-else />
+      </template>
+      <div v-else class="initial-loading">
+        <span class="spinner"></span><span>{{ t("app.connecting") }}</span
+        ><button v-if="state.error" class="button" @click="initialize">
+          {{ t("app.retry") }}
+        </button>
+      </div>
+    </main>
+    <Transition name="toast"
+      ><div v-if="state.notice" class="toast" role="status">
+        <Icon name="check" :size="18" />{{ state.notice }}
+      </div></Transition
+    >
+  </div>
+</template>

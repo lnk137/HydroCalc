@@ -1,30 +1,19 @@
-import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
-import { defineConfig } from 'vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import vue from '@vitejs/plugin-vue'
+// 开发代理由 Electron 注入实际后端地址，发行版直接使用同源 API。
+const backend = process.env.HYDROCALC_API_URL || "http://127.0.0.1:5000";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
-  plugins: [
-    vue(),
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+  plugins: [vue()],
+  build: {
+    outDir: "../web",
+    emptyOutDir: true,
   },
   server: {
-    host: '0.0.0.0',
-  }
-
-})
+    host: "127.0.0.1",
+    proxy: {
+      "/api": backend,
+    },
+  },
+});
