@@ -5,6 +5,7 @@ const {
   ipcMain,
   Menu,
   nativeTheme,
+  screen,
   shell,
 } = require("electron");
 const fs = require("node:fs/promises");
@@ -125,12 +126,13 @@ async function start() {
   console.log("HydroCalc URL:", url);
 
   // 操作系统主题与网页样式保持一致；原生窗口允许缩放而不是固定尺寸。
+  const workArea = screen.getPrimaryDisplay().workAreaSize;
   window = new BrowserWindow({
     title: "HydroCalc",
-    width: 1390,
-    height: 980,
-    minWidth: 900,
-    minHeight: 680,
+    width: Math.min(1390, workArea.width),
+    height: Math.min(980, workArea.height),
+    minWidth: Math.min(900, workArea.width),
+    minHeight: Math.min(680, workArea.height),
     show: false,
     backgroundColor: nativeTheme.shouldUseDarkColors ? "#21252b" : "#f5f6f4",
     webPreferences: {

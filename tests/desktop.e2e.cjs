@@ -86,6 +86,37 @@ async function run() {
     );
     assert.equal(background, "#f4f4f5");
     console.log("Desktop startup and neutral background passed");
+    // 原生窗口尺寸回归：不使用页面视口模拟，工具栏与指标必须留在真实可见宽度内。
+    const nativeWindow = await application.browserWindow(page);
+    for (const width of [900, 1000, 1280]) {
+      await nativeWindow.evaluate(
+        (window, size) => window.setSize(size, 800),
+        width,
+      );
+      await page.waitForTimeout(150);
+      const geometry = await page.evaluate(() => ({
+        width: innerWidth,
+        document: document.documentElement.scrollWidth,
+        header: document.querySelector(".page-header").getBoundingClientRect()
+          .right,
+        results: document
+          .querySelector(".results-panel")
+          .getBoundingClientRect().right,
+      }));
+      assert.ok(
+        geometry.document <= geometry.width + 1,
+        JSON.stringify(geometry),
+      );
+      assert.ok(
+        geometry.header <= geometry.width + 1,
+        JSON.stringify(geometry),
+      );
+      assert.ok(
+        geometry.results <= geometry.width + 1,
+        JSON.stringify(geometry),
+      );
+    }
+    console.log("Native window layout passed at 900, 1000 and 1280 pixels");
 
     // 同一批次混合彩色、二值和损坏图片：成功项继续完成，失败项独立显示。
     await page
@@ -155,6 +186,14 @@ async function run() {
     );
     const archived = unzipSync(fs.readFileSync(batchPath));
     assert.ok(archived["summary.csv"]);
+    assert.ok(
+      Buffer.from(archived["summary.csv"])
+        .toString()
+        .includes("invalid.png,failed") ||
+        Buffer.from(archived["summary.csv"])
+          .toString()
+          .includes('invalid.png"' + ",failed"),
+    );
     assert.equal(
       Object.keys(archived).filter((name) => name.endsWith("/mask.png")).length,
       2,
