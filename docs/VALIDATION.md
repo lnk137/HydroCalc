@@ -37,6 +37,6 @@
 
 ## 平台验证范围
 
-本机已生成 macOS arm64 应用。Apple Silicon Mac、Intel Mac、Windows x64 的独立编译、自动测试、真实桌面测试和 Forge 打包由 `.github/workflows/desktop.yml` 验证。各平台结论以对应工作流最终结果为准；不能把工作流配置存在等同于三个系统全部通过。
+本机已生成 macOS arm64 的 ZIP 与 DMG，并对实际打包应用执行完整桌面验收。原生窗口 900、1000、1280 px 宽度均无横向裁切。Apple Silicon Mac、Intel Mac、Windows x64 的独立编译、自动测试、真实桌面测试和 Forge 打包由 `.github/workflows/desktop.yml` 验证。GitHub 两次拒绝启动任务，注释为账户因账单问题锁定（运行 44053799139、44053995400），因此 Intel Mac 与 Windows 的编译、运行和安装包尚未验证。恢复账户后可重跑该工作流；配置存在不等于三个系统已经全部通过。
 
 默认本地发行包未签名和公证，没有执行公开发布或自动更新。
