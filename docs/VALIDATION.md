@@ -6,7 +6,7 @@
 
 - macOS Apple Silicon 上从固定源码编译 OpenCV C++ 工作进程，实际调用原生程序。
 - `npm run build:ui`：Vue + TypeScript 检查和构建通过。
-- `npm test`：12 项检查通过，覆盖尺度不变性、空白／全染色、实际优先区域计数、HSV 与两种聚类、非法设置、SQLite 恢复、语言键、无 AI/Python 运行依赖、真实 API 与导出。
+- `npm test`：13 项检查通过，覆盖尺度不变性、空白／全染色、实际优先区域计数、HSV 与两种聚类、非法设置、SQLite 恢复、语言键、无 AI/Python 运行依赖、真实 API 与导出，以及 Squirrel 安装器资源。
 - Excel 导出通过重新读取工作簿验证尺寸及单元格数值，确认参考线未混入像素矩阵。
 - `npm run test:desktop`：实际 Electron 窗口、隔离的 Node 服务、SQLite 和 C++ 工作进程通过全流程检查。
 - 桌面验证覆盖混合彩色／二值／损坏图片、单项失败隔离、原生 ZIP 保存、自动保存、非法值保留旧配置、HSV 键盘微调、中英文切换、深色模式、重启恢复。
@@ -40,6 +40,8 @@
 本机已生成 macOS arm64 的 ZIP 与 DMG，并对实际打包应用执行完整桌面验收。原生窗口 900、1000、1280 px 宽度均无横向裁切。Apple Silicon Mac、Intel Mac、Windows x64 的独立编译、自动测试、真实桌面测试和 Forge 打包配置在 `.github/workflows/desktop.yml` 中。GitHub 两次拒绝启动任务，注释为账户因账单问题锁定（运行 44053799139、44053995400）；恢复账户后可重跑。
 
 后续在 Apple Silicon Mac 上使用 MinGW-w64 成功交叉编译 Windows x64 C++ 工作进程，通过 Forge 生成 Windows x64 便携 ZIP 和 Squirrel Setup.exe。工作进程为 PE32+ x64，静态链接 OpenCV、GCC 与线程运行库；导入表仅含 Windows 系统运行库。安装器使用本机 Mono、7-Zip 和 PE 资源适配器生成。新增测试验证真实 Squirrel 模板的代码节、入口点、复制资源和内嵌 ZIP 保持正确。
+
+最终安装器 170,414,080 字节，便携 ZIP 174,369,399 字节。已从实际 Setup.exe 提取安装 ZIP，核对 RELEASES 的 SHA-1 与长度、工作进程和 app.asar 的逐字节一致性、十份计算运行库许可，以及官方安装器模板的代码节。输出目录附 SHA-256 校验文件。
 
 未在 Windows 实机安装或运行应用。Wine 11 和 10.4 在当前 Apple Silicon Docker 环境无法完成运行验证，因此未将其计为通过。Windows 原生界面、安装卸载以及 Intel Mac 运行仍需目标机器验收；成功生成安装包不代表这些检查已经完成。
 
