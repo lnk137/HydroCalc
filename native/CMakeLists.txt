@@ -56,6 +56,8 @@ target_include_directories(hydrocalc-worker PRIVATE
 target_link_libraries(hydrocalc-worker PRIVATE opencv_core opencv_imgproc opencv_imgcodecs nlohmann_json::nlohmann_json)
 if(MSVC)
   target_compile_options(hydrocalc-worker PRIVATE /utf-8)
+endif()
+if(WIN32)
   target_compile_definitions(hydrocalc-worker PRIVATE NOMINMAX)
 endif()
 install(TARGETS hydrocalc-worker RUNTIME DESTINATION .)
