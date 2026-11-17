@@ -13,6 +13,8 @@
     "start": "electron .",
     "build:ui": "npm run build --workspace @hydrocalc/ui",
     "build:native": "node scripts/build-native.cjs",
+    "build:windows-worker": "node scripts/build-windows.cjs",
+    "make:windows": "node scripts/make-windows.cjs",
     "test": "node --test tests/*.test.cjs",
     "package": "npm run build:ui && npm run build:native && electron-forge package",
     "make": "npm run build:ui && npm run build:native && electron-forge make",
@@ -25,7 +27,8 @@
     "@electron-forge/maker-zip": "8.0.1",
     "@playwright/test": "1.65.1",
     "electron": "45.3.3",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "resedit": "2.0.3"
   },
   "dependencies": {
     "archiver": "^7.0.1",
