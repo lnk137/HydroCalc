@@ -63,7 +63,13 @@ async function readEntry(entry: FileSystemEntry): Promise<File[]> {
   if (entry.isFile) {
     return new Promise((resolve) =>
       (entry as FileSystemFileEntry).file(
-        (file) => resolve([file]),
+        (file) => {
+          // 拖入文件夹时保留相对路径，与文件夹选择入口的命名规则一致。
+          Object.defineProperty(file, "webkitRelativePath", {
+            value: entry.fullPath.replace(/^\//, ""),
+          });
+          resolve([file]);
+        },
         () => resolve([]),
       ),
     );

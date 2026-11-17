@@ -15,7 +15,9 @@ async function exportBatch(repository, identifiers, target) {
   )
     throw new Error("errors.export");
   const records = identifiers.map((identifier) => repository.get(identifier));
-  if (records.some((record) => record.status !== "completed"))
+  if (
+    records.some((record) => !["completed", "failed"].includes(record.status))
+  )
     throw new Error("errors.notCompleted");
   const temporary = target + ".hydrocalc-tmp";
   const output = syncFs.createWriteStream(temporary);
@@ -40,7 +42,7 @@ async function exportBatch(repository, identifiers, target) {
     "maximum_depth_cm",
     "length_index",
   ];
-  const rows = ["filename," + columns.join(",")];
+  const rows = ["filename,status,error," + columns.join(",")];
   const configuration = loadSettings(repository.directory);
   const imageNames = [
     "mask.png",
@@ -63,7 +65,12 @@ async function exportBatch(repository, identifiers, target) {
     if (/^[=+@-]/.test(cell)) cell = "'" + cell;
     cell = '"' + cell.replaceAll('"', '""') + '"';
     rows.push(
-      [cell, ...columns.map((column) => record.metrics[column])].join(","),
+      [
+        cell,
+        record.status,
+        record.error || "",
+        ...columns.map((column) => record.metrics?.[column] ?? ""),
+      ].join(","),
     );
     archive.append(JSON.stringify(record, null, 2), {
       name: folder + "/result.json",

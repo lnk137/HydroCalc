@@ -17,6 +17,7 @@ export const state = reactive({
   exporting: false,
   filename: "",
   batch: [] as BatchItem[],
+  batchExpanded: true,
   batchSettings: null as Settings | null,
 });
 
@@ -189,6 +190,7 @@ export async function analyzeFiles(files: File[], override?: Settings) {
     JSON.stringify(override || state.settings),
   ) as Settings;
   state.batchSettings = snapshot;
+  state.batchExpanded = true;
   state.batch = supported.map((file) => ({
     key: ++nextBatchKey,
     file,
@@ -268,7 +270,7 @@ export function retryFailed() {
 
 export async function exportBatch() {
   const identifiers = state.batch
-    .filter((item) => item.status === "completed" && item.id)
+    .filter((item) => ["completed", "failed"].includes(item.status) && item.id)
     .map((item) => item.id!);
   if (!identifiers.length) return;
   state.exporting = true;

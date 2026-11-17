@@ -26,7 +26,12 @@ const completed = computed(
 </script>
 
 <template>
-  <details class="panel batch-panel" open v-if="state.batch.length > 1">
+  <details
+    class="panel batch-panel"
+    :open="state.batchExpanded"
+    @toggle="state.batchExpanded = ($event.target as HTMLDetailsElement).open"
+    v-if="state.batch.length > 1"
+  >
     <summary>
       <div>
         <Icon name="grid" :size="17" /><strong>{{ t("batch.title") }}</strong
